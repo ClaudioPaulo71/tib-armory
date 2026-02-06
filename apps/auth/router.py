@@ -125,8 +125,8 @@ def subscribe_premium(
     session: Session = Depends(get_session)
 ):
     sub_service = SubscriptionService(session)
-    success_url = str(request.url_for('dashboard')) # Redirect to analytics after success
-    cancel_url = str(request.url_for('dashboard'))
+    success_url = str(request.url_for('listar_armas')) # Redirect to home
+    cancel_url = str(request.url_for('listar_armas'))
     
     checkout_url = sub_service.create_checkout_session(user, success_url, cancel_url)
     

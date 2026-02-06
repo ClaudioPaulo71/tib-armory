@@ -1,0 +1,73 @@
+{% extends "shared/base.html" %}
+
+{% block content %}
+<div class="space-y-8 animate-[fadeIn_0.3s_ease-out]">
+
+    <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+        <div>
+            <h1 class="text-3xl font-ops text-white uppercase tracking-widest">Global Range Logs</h1>
+            <p class="text-xs font-mono text-zinc-500 uppercase tracking-widest mt-1">
+                COMBAT DATA RECORD // ALL UNITS
+            </p>
+        </div>
+
+        <div class="text-right">
+            <div class="text-[0.6rem] text-zinc-600 uppercase tracking-widest">Total Rounds Fired</div>
+            <div class="text-2xl font-mono text-amber-500 font-bold">{{ "{:,}".format(stats.total_rounds) }}</div>
+        </div>
+    </div>
+
+    {% if sessions %}
+    <div class="tactical-panel rounded-lg bg-zinc-950 p-6">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-zinc-800">
+                        <th class="py-3 px-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold">Date</th>
+                        <th class="py-3 px-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold">Unit (Gun)
+                        </th>
+                        <th class="py-3 px-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold">Location
+                        </th>
+                        <th class="py-3 px-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold text-right">
+                            Rounds</th>
+                        <th class="py-3 px-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold text-right">
+                            Failures</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 font-mono text-sm">
+                    {% for session in sessions %}
+                    <tr class="hover:bg-zinc-900/50 transition duration-150 group">
+                        <td class="py-4 px-4 text-zinc-300">{{ session.date.strftime('%Y-%m-%d') }}</td>
+                        <td class="py-4 px-4">
+                            <span class="text-amber-500 font-bold group-hover:text-amber-400 transition">{{
+                                session.gun.nickname }}</span>
+                            <span class="text-zinc-600 text-xs ml-1 block">{{ session.gun.make }} {{ session.gun.model
+                                }}</span>
+                        </td>
+                        <td class="py-4 px-4 text-zinc-400">{{ session.location }}</td>
+                        <td class="py-4 px-4 text-right text-zinc-300">{{ session.rounds_fired }}</td>
+                        <td class="py-4 px-4 text-right">
+                            {% if session.failure_count > 0 %}
+                            <span class="text-red-500 font-bold">{{ session.failure_count }}</span>
+                            {% else %}
+                            <span class="text-zinc-700">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-20 border border-zinc-800 border-dashed rounded-lg bg-zinc-900/30">
+        <div class="text-4xl grayscale opacity-20 mb-4">📝</div>
+        <p class="text-zinc-500 font-mono text-xs uppercase tracking-widest">No range data recorded yet.</p>
+        <a href="/armory"
+            class="inline-block mt-4 text-amber-600 hover:text-amber-500 text-xs font-bold uppercase tracking-widest border-b border-amber-600/30 pb-1">Enter
+            a Log via Inventory</a>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

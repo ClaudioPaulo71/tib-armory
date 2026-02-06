@@ -147,3 +147,7 @@ class RangeService:
             shutil.copyfileobj(file.file, buffer)
         
         return str(caminho_destino)
+
+    def get_all_sessions(self, user: User) -> List[RangeSession]:
+        stmt = select(RangeSession).join(Gun).where(Gun.user_id == user.id).order_by(RangeSession.date.desc())
+        return self.session.exec(stmt).all()

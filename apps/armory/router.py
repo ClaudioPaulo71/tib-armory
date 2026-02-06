@@ -56,6 +56,24 @@ def criar_arma(
     )
     return RedirectResponse(url="/armory", status_code=303)
 
+# 2.5 Rota de LOGS GERAIS (Global Range Logs)
+@router.get("/logs")
+def listar_logs(
+    request: Request,
+    service: RangeService = Depends(get_service),
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(url="/auth/login")
+
+    sessions = service.get_all_sessions(user) 
+    return templates.TemplateResponse("armory/logs.html", {
+        "request": request,
+        "user": user,
+        "stats": service.get_dashboard_stats(user), # Reusing stats for header bits if needed
+        "sessions": sessions
+    })
+
 # 3. Rota de DETALHE da Arma
 @router.get("/{gun_id}")
 def detalhe_arma(

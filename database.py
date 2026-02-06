@@ -1,8 +1,10 @@
 from sqlmodel import SQLModel, create_engine, Session
 
+import os
+
 # Configuração do Banco de Dados
-sqlite_file_name = "tib_saas.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+sqlite_file_name = "tib_armory.db"
+sqlite_url = os.getenv("DATABASE_URL", f"sqlite:///{sqlite_file_name}")
 
 # check_same_thread=False é necessário para SQLite com FastAPI
 connect_args = {"check_same_thread": False}
@@ -13,11 +15,10 @@ def get_session():
     with Session(engine) as session:
         yield session
 
-# --- A FUNÇÃO QUE FALTOU ---
 # Essa função cria o arquivo .db e as tabelas se elas não existirem
 def create_db_and_tables():
-    # ATUALME ESTA LINHA:
-    from apps.humidor.models import Cigar, SmokingSession, CigarImage, SessionImage
     from apps.auth.models import User
+    # Importar modelos do Armory
+    from apps.armory.models import Gun, Accessory, RangeSession, GunMaintenance
     
     SQLModel.metadata.create_all(engine)

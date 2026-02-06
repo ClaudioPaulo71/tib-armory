@@ -1,0 +1,19 @@
+services:
+  web:
+    build: .
+    container_name: tib_armory_app
+    restart: always
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./data:/app/data
+      - ./static/uploads:/app/static/uploads
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=sqlite:///data/tib_armory.db
+    networks:
+      - armory_network
+
+networks:
+  armory_network:

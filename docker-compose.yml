@@ -3,8 +3,8 @@ services:
     build: .
     container_name: tib_armory_app
     restart: always
-    ports:
-      - "8003:8000"
+    # ports:
+    #   - "8003:8000" # Exposed via Traefik now
     volumes:
       - ./data:/app/data
       - ./static/uploads:/app/static/uploads
@@ -14,7 +14,14 @@ services:
     environment:
       - DATABASE_URL=sqlite:///data/tib_armory.db
     networks:
-      - armory_network
+      - tib_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.armory.rule=Host(`armory.tib-usa.app`)"
+      - "traefik.http.routers.armory.entrypoints=websecure"
+      - "traefik.http.routers.armory.tls.certresolver=myresolver"
+      - "traefik.http.services.armory.loadbalancer.server.port=8000"
 
 networks:
-  armory_network:
+  tib_network:
+    external: true
